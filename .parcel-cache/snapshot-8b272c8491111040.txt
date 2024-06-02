@@ -43,7 +43,7 @@
 67C:\Users\User\Desktop\Forkify\node_modules\utility-types\SUPPORT.md133617298167092732 0
 79C:\Users\User\Desktop\Forkify\node_modules\core-js\es\number\is-safe-integer.js133617298496257208 0
 70C:\Users\User\Desktop\Forkify\node_modules\core-js\es\object\assign.js133617298469160022 0
-52C:\Users\User\Desktop\Forkify\dist\index.e37f48ea.js133618087864209968 0
+52C:\Users\User\Desktop\Forkify\dist\index.e37f48ea.js133618100243788738 0
 120C:\Users\User\Desktop\Forkify\node_modules\@parcel\source-map\parcel_sourcemap_node\artifacts\index.linux-arm64-gnu.node133617298175897918 0
 54C:\Users\User\Desktop\Forkify\node_modules\.bin\parcel133617298216613332 0
 89C:\Users\User\Desktop\Forkify\node_modules\lmdb\node_modules\node-addon-api\noexcept.gypi133617298159016157 0
@@ -87,7 +87,7 @@
 87C:\Users\User\Desktop\Forkify\node_modules\@swc\helpers\_\_async_generator\package.json133617298181848222 0
 51C:\Users\User\Desktop\Forkify\node_modules\mdn-data133617298173127383 1
 64C:\Users\User\Desktop\Forkify\node_modules\core-js\features\math133617298514061380 1
-34C:\Users\User\Desktop\Forkify\dist133618087864256015 1
+34C:\Users\User\Desktop\Forkify\dist133618100243926948 1
 99C:\Users\User\Desktop\Forkify\node_modules\csso\node_modules\css-tree\lib\syntax\node\WhiteSpace.js133617298184000765 0
 70C:\Users\User\Desktop\Forkify\node_modules\is-binary-path\package.json133617298674141128 0
 53C:\Users\User\Desktop\Forkify\node_modules\@parcel\fs133617298169652721 1
@@ -265,7 +265,7 @@
 62C:\Users\User\Desktop\Forkify\node_modules\parcel\package.json133617298162224432 0
 67C:\Users\User\Desktop\Forkify\node_modules\core-js\features\atob.js133617298469864577 0
 72C:\Users\User\Desktop\Forkify\node_modules\core-js\internals\is-array.js133617298495582061 0
-50C:\Users\User\Desktop\Forkify\src\js\controller.js133618087863750228 0
+50C:\Users\User\Desktop\Forkify\src\js\controller.js133618100243270146 0
 63C:\Users\User\Desktop\Forkify\node_modules\msgpackr\index.d.cts133617298162821141 0
 73C:\Users\User\Desktop\Forkify\node_modules\semver\functions\prerelease.js133617298173392084 0
 83C:\Users\User\Desktop\Forkify\node_modules\core-js\features\typed-array\includes.js133617298493190946 0
@@ -9684,4 +9684,4 @@
 57C:\Users\User\Desktop\Forkify\dist\index.f7626f62.css.map133618087616050127 0
 55C:\Users\User\Desktop\Forkify\dist\favicon.8b2f57bf.png133618087616547920 0
 53C:\Users\User\Desktop\Forkify\dist\icons.21bad73c.svg133618087617159401 0
-56C:\Users\User\Desktop\Forkify\dist\index.e37f48ea.js.map133618087864234894 0
+56C:\Users\User\Desktop\Forkify\dist\index.e37f48ea.js.map133618100243906739 0
