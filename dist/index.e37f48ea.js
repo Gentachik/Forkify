@@ -588,8 +588,9 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _esnextMapGroupByJs = require("core-js/modules/esnext.map.group-by.js");
 var _esnextSymbolDisposeJs = require("core-js/modules/esnext.symbol.dispose.js");
 var _webImmediateJs = require("core-js/modules/web.immediate.js");
-var _iconsSvg = require("url:../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+var _recipeViewJs = require("./views/recipeView.js");
+var _recipeViewJsDefault = parcelHelpers.interopDefault(_recipeViewJs);
+var _modelJs = require("./model.js");
 var _runtime = require("regenerator-runtime/runtime");
 const recipeContainer = document.querySelector(".recipe");
 const timeout = function(s) {
@@ -600,183 +601,50 @@ const timeout = function(s) {
     });
 };
 // https://forkify-api.herokuapp.com/v2
-///////////////////////////////////////
-const renderSpinner = function(parentEl) {
-    const markup = `<div class="spinner">
-  <svg>
-    <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
-  </svg>
-</div>`;
-    parentEl.innerHTML = "";
-    parentEl.insertAdjacentHTML("afterbegin", markup);
-};
-const showReciepe = async function() {
+const controlRecipes = async function() {
     try {
-        renderSpinner(recipeContainer);
         const id = window.location.hash.slice(1);
         if (!id) return;
-        const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
-        const data = await res.json();
-        if (res.status != 200) throw new Error(`${data.message} (${res.status})`);
-        let { recipe } = data.data;
-        recipe = {
-            id: recipe.id,
-            title: recipe.title,
-            publisher: recipe.publisher,
-            sourceUrl: recipe.source_url,
-            image: recipe.image_url,
-            servings: recipe.servings,
-            cookingTime: recipe.cooking_time,
-            ingredients: recipe.ingredients
-        };
-        const markup = `<figure class="recipe__fig">
-    <img src="${recipe.image}" alt="${recipe.title}" class="recipe__img" />
-    <h1 class="recipe__title">
-      <span>${recipe.title}</span>
-    </h1>
-  </figure>
-
-  <div class="recipe__details">
-    <div class="recipe__info">
-      <svg class="recipe__info-icon">
-        <use href="${(0, _iconsSvgDefault.default)}#icon-clock"></use>
-      </svg>
-      <span class="recipe__info-data recipe__info-data--minutes">${recipe.cookingTime}</span>
-      <span class="recipe__info-text">minutes</span>
-    </div>
-    <div class="recipe__info">
-      <svg class="recipe__info-icon">
-        <use href="${(0, _iconsSvgDefault.default)}#icon-users"></use>
-      </svg>
-      <span class="recipe__info-data recipe__info-data--people">4</span>
-      <span class="recipe__info-text">${recipe.servings}</span>
-
-      <div class="recipe__info-buttons">
-        <button class="btn--tiny btn--increase-servings">
-          <svg>
-            <use href="${(0, _iconsSvgDefault.default)}#icon-minus-circle"></use>
-          </svg>
-        </button>
-        <button class="btn--tiny btn--increase-servings">
-          <svg>
-            <use href="${(0, _iconsSvgDefault.default)}#icon-plus-circle"></use>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <div class="recipe__user-generated">
-      <svg>
-        <use href="${(0, _iconsSvgDefault.default)}#icon-user"></use>
-      </svg>
-    </div>
-    <button class="btn--round">
-      <svg class="">
-        <use href="${(0, _iconsSvgDefault.default)}#icon-bookmark-fill"></use>
-      </svg>
-    </button>
-  </div>
-
-  <div class="recipe__ingredients">
-    <h2 class="heading--2">Recipe ingredients</h2>
-    <ul class="recipe__ingredient-list">
-    ${recipe.ingredients.map((ing)=>{
-            return `
-    <li class="recipe__ingredient">
-    <svg class="recipe__icon">
-      <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
-    </svg>
-    <div class="recipe__quantity">${ing.quantity}</div>
-    <div class="recipe__description">
-      <span class="recipe__unit">${ing.unit}</span>
-      ${ing.description}
-    </div>
-  </li>`;
-        }).join("")}
-
-          
-    </ul>
-  </div>
-
-  <div class="recipe__directions">
-    <h2 class="heading--2">How to cook it</h2>
-    <p class="recipe__directions-text">
-      This recipe was carefully designed and tested by
-      <span class="recipe__publisher">${recipe.publisher}</span>. Please check out
-      directions at their website.
-    </p>
-    <a
-      class="btn--small recipe__btn"
-      href="${recipe.sourceUrl}"
-      target="_blank"
-    >
-      <span>Directions</span>
-      <svg class="search__icon">
-        <use href="${(0, _iconsSvgDefault.default)}#icon-arrow-right"></use>
-      </svg>
-    </a>
-  </div>`;
-        recipeContainer.innerHTML = "";
-        recipeContainer.insertAdjacentHTML("afterbegin", markup);
+        (0, _recipeViewJsDefault.default).renderSpinner();
+        await _modelJs.loadRecipe(id);
+        (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
     } catch (err) {
         alert(err);
     }
 };
-showReciepe();
-[
-    "hashchange",
-    "load"
-].forEach((ev)=>window.addEventListener(ev, showReciepe));
-
-},{"core-js/modules/esnext.map.group-by.js":"3AR1K","core-js/modules/esnext.symbol.dispose.js":"b9ez5","core-js/modules/web.immediate.js":"49tUX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../img/icons.svg":"loVOp","regenerator-runtime/runtime":"dXNgZ"}],"3AR1K":[function(require,module,exports) {
-"use strict";
-// TODO: Remove from `core-js@4`
-require("4d92d9132913bacd");
-
-},{"4d92d9132913bacd":"c4yOM"}],"c4yOM":[function(require,module,exports) {
-"use strict";
-var $ = require("6567f4dade5d8960");
-var uncurryThis = require("f35d7393646ad055");
-var aCallable = require("c4503f7eb1018306");
-var requireObjectCoercible = require("d7c6ba4f404b5360");
-var iterate = require("ff883ec9010d6328");
-var MapHelpers = require("f9f796f22480c881");
-var IS_PURE = require("dc5cfe657d3f962b");
-var fails = require("59f5d275c85c76");
-var Map = MapHelpers.Map;
-var has = MapHelpers.has;
-var get = MapHelpers.get;
-var set = MapHelpers.set;
-var push = uncurryThis([].push);
-var DOES_NOT_WORK_WITH_PRIMITIVES = IS_PURE || fails(function() {
-    return Map.groupBy("ab", function(it) {
-        return it;
-    }).get("a").length !== 1;
+document.addEventListener("DOMContentLoaded", ()=>{
+    const events = [
+        "hashchange",
+        "load"
+    ];
+    events.forEach((ev)=>{
+        window.addEventListener(ev, controlRecipes);
+    });
 });
-// `Map.groupBy` method
-// https://github.com/tc39/proposal-array-grouping
+
+},{"core-js/modules/web.immediate.js":"49tUX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","regenerator-runtime/runtime":"dXNgZ","./model.js":"Y4A21","./views/recipeView.js":"l60JC","core-js/modules/esnext.map.group-by.js":"3AR1K","core-js/modules/esnext.symbol.dispose.js":"b9ez5"}],"49tUX":[function(require,module,exports) {
+"use strict";
+// TODO: Remove this module from `core-js@4` since it's split to modules listed below
+require("52e9b3eefbbce1ed");
+require("292fa64716f5b39e");
+
+},{"52e9b3eefbbce1ed":"fOGFr","292fa64716f5b39e":"l7FDS"}],"fOGFr":[function(require,module,exports) {
+"use strict";
+var $ = require("79389288a80b279c");
+var global = require("22a078687be7e1b6");
+var clearImmediate = require("84ba5ca62b8b14c9").clear;
+// `clearImmediate` method
+// http://w3c.github.io/setImmediate/#si-clearImmediate
 $({
-    target: "Map",
-    stat: true,
-    forced: IS_PURE || DOES_NOT_WORK_WITH_PRIMITIVES
+    global: true,
+    bind: true,
+    enumerable: true,
+    forced: global.clearImmediate !== clearImmediate
 }, {
-    groupBy: function groupBy(items, callbackfn) {
-        requireObjectCoercible(items);
-        aCallable(callbackfn);
-        var map = new Map();
-        var k = 0;
-        iterate(items, function(value) {
-            var key = callbackfn(value, k++);
-            if (!has(map, key)) set(map, key, [
-                value
-            ]);
-            else push(get(map, key), value);
-        });
-        return map;
-    }
+    clearImmediate: clearImmediate
 });
 
-},{"6567f4dade5d8960":"dIGt4","f35d7393646ad055":"7GlkT","c4503f7eb1018306":"gOMir","d7c6ba4f404b5360":"fOR0B","ff883ec9010d6328":"4OXGm","f9f796f22480c881":"f9Wim","dc5cfe657d3f962b":"5ZsyC","59f5d275c85c76":"hL6D2"}],"dIGt4":[function(require,module,exports) {
+},{"79389288a80b279c":"dIGt4","22a078687be7e1b6":"i8HOC","84ba5ca62b8b14c9":"7jDg7"}],"dIGt4":[function(require,module,exports) {
 "use strict";
 var global = require("6643b6592ad59b23");
 var getOwnPropertyDescriptor = require("2ec751f39e500b85").f;
@@ -1771,277 +1639,7 @@ var NATIVE = isForced.NATIVE = "N";
 var POLYFILL = isForced.POLYFILL = "P";
 module.exports = isForced;
 
-},{"10299561ea0c7870":"hL6D2","8b1ecdaf59f07210":"l3Kyn"}],"4OXGm":[function(require,module,exports) {
-"use strict";
-var bind = require("2f267ed50e670495");
-var call = require("c0af58bb1ef1cc62");
-var anObject = require("7fa6542c03ca9239");
-var tryToString = require("fa596d1a4c07b72a");
-var isArrayIteratorMethod = require("fd753cc641a6f10a");
-var lengthOfArrayLike = require("2a15dee148d3db96");
-var isPrototypeOf = require("417f9a13deeb58a6");
-var getIterator = require("43af53be1b24dae5");
-var getIteratorMethod = require("bf7ad32b21aed0b4");
-var iteratorClose = require("5241389e1d6eeb73");
-var $TypeError = TypeError;
-var Result = function(stopped, result) {
-    this.stopped = stopped;
-    this.result = result;
-};
-var ResultPrototype = Result.prototype;
-module.exports = function(iterable, unboundFunction, options) {
-    var that = options && options.that;
-    var AS_ENTRIES = !!(options && options.AS_ENTRIES);
-    var IS_RECORD = !!(options && options.IS_RECORD);
-    var IS_ITERATOR = !!(options && options.IS_ITERATOR);
-    var INTERRUPTED = !!(options && options.INTERRUPTED);
-    var fn = bind(unboundFunction, that);
-    var iterator, iterFn, index, length, result, next, step;
-    var stop = function(condition) {
-        if (iterator) iteratorClose(iterator, "normal", condition);
-        return new Result(true, condition);
-    };
-    var callFn = function(value) {
-        if (AS_ENTRIES) {
-            anObject(value);
-            return INTERRUPTED ? fn(value[0], value[1], stop) : fn(value[0], value[1]);
-        }
-        return INTERRUPTED ? fn(value, stop) : fn(value);
-    };
-    if (IS_RECORD) iterator = iterable.iterator;
-    else if (IS_ITERATOR) iterator = iterable;
-    else {
-        iterFn = getIteratorMethod(iterable);
-        if (!iterFn) throw new $TypeError(tryToString(iterable) + " is not iterable");
-        // optimisation for array iterators
-        if (isArrayIteratorMethod(iterFn)) {
-            for(index = 0, length = lengthOfArrayLike(iterable); length > index; index++){
-                result = callFn(iterable[index]);
-                if (result && isPrototypeOf(ResultPrototype, result)) return result;
-            }
-            return new Result(false);
-        }
-        iterator = getIterator(iterable, iterFn);
-    }
-    next = IS_RECORD ? iterable.next : iterator.next;
-    while(!(step = call(next, iterator)).done){
-        try {
-            result = callFn(step.value);
-        } catch (error) {
-            iteratorClose(iterator, "throw", error);
-        }
-        if (typeof result == "object" && result && isPrototypeOf(ResultPrototype, result)) return result;
-    }
-    return new Result(false);
-};
-
-},{"2f267ed50e670495":"7vpmS","c0af58bb1ef1cc62":"d7JlP","7fa6542c03ca9239":"4isCr","fa596d1a4c07b72a":"4O7d7","fd753cc641a6f10a":"l33Z9","2a15dee148d3db96":"lY4mS","417f9a13deeb58a6":"3jtKQ","43af53be1b24dae5":"hjwee","bf7ad32b21aed0b4":"d8BiC","5241389e1d6eeb73":"hs7nW"}],"7vpmS":[function(require,module,exports) {
-"use strict";
-var uncurryThis = require("92f6f475baa85665");
-var aCallable = require("547ee4f9dab0cc76");
-var NATIVE_BIND = require("5acd31cba656d393");
-var bind = uncurryThis(uncurryThis.bind);
-// optional / simple context binding
-module.exports = function(fn, that) {
-    aCallable(fn);
-    return that === undefined ? fn : NATIVE_BIND ? bind(fn, that) : function() {
-        return fn.apply(that, arguments);
-    };
-};
-
-},{"92f6f475baa85665":"5Hioa","547ee4f9dab0cc76":"gOMir","5acd31cba656d393":"i16Dq"}],"5Hioa":[function(require,module,exports) {
-"use strict";
-var classofRaw = require("8e77093015e1e67f");
-var uncurryThis = require("9daa4dbbca634c9e");
-module.exports = function(fn) {
-    // Nashorn bug:
-    //   https://github.com/zloirock/core-js/issues/1128
-    //   https://github.com/zloirock/core-js/issues/1130
-    if (classofRaw(fn) === "Function") return uncurryThis(fn);
-};
-
-},{"8e77093015e1e67f":"bdfmm","9daa4dbbca634c9e":"7GlkT"}],"l33Z9":[function(require,module,exports) {
-"use strict";
-var wellKnownSymbol = require("85b004b6ab4bc5da");
-var Iterators = require("6de391ad2976ca02");
-var ITERATOR = wellKnownSymbol("iterator");
-var ArrayPrototype = Array.prototype;
-// check on default Array iterator
-module.exports = function(it) {
-    return it !== undefined && (Iterators.Array === it || ArrayPrototype[ITERATOR] === it);
-};
-
-},{"85b004b6ab4bc5da":"gTwyA","6de391ad2976ca02":"30XHR"}],"30XHR":[function(require,module,exports) {
-"use strict";
-module.exports = {};
-
-},{}],"hjwee":[function(require,module,exports) {
-"use strict";
-var call = require("132ebf774107ae29");
-var aCallable = require("e248489b4825ceb7");
-var anObject = require("18a343d2ef625577");
-var tryToString = require("7e576a1564cef99e");
-var getIteratorMethod = require("4a7b0311be0471b2");
-var $TypeError = TypeError;
-module.exports = function(argument, usingIterator) {
-    var iteratorMethod = arguments.length < 2 ? getIteratorMethod(argument) : usingIterator;
-    if (aCallable(iteratorMethod)) return anObject(call(iteratorMethod, argument));
-    throw new $TypeError(tryToString(argument) + " is not iterable");
-};
-
-},{"132ebf774107ae29":"d7JlP","e248489b4825ceb7":"gOMir","18a343d2ef625577":"4isCr","7e576a1564cef99e":"4O7d7","4a7b0311be0471b2":"d8BiC"}],"d8BiC":[function(require,module,exports) {
-"use strict";
-var classof = require("32d61dafd81dde78");
-var getMethod = require("84e24a6ac7559d3a");
-var isNullOrUndefined = require("f0707282c0d93eeb");
-var Iterators = require("1c181d5c49efd5d1");
-var wellKnownSymbol = require("d10d0e0ae49498c5");
-var ITERATOR = wellKnownSymbol("iterator");
-module.exports = function(it) {
-    if (!isNullOrUndefined(it)) return getMethod(it, ITERATOR) || getMethod(it, "@@iterator") || Iterators[classof(it)];
-};
-
-},{"32d61dafd81dde78":"dKT7A","84e24a6ac7559d3a":"9Zfiw","f0707282c0d93eeb":"gM5ar","1c181d5c49efd5d1":"30XHR","d10d0e0ae49498c5":"gTwyA"}],"dKT7A":[function(require,module,exports) {
-"use strict";
-var TO_STRING_TAG_SUPPORT = require("397e535b3976d304");
-var isCallable = require("eebd8012c2d2c3ae");
-var classofRaw = require("8da113eeaf06c4ba");
-var wellKnownSymbol = require("df252844008f634");
-var TO_STRING_TAG = wellKnownSymbol("toStringTag");
-var $Object = Object;
-// ES3 wrong here
-var CORRECT_ARGUMENTS = classofRaw(function() {
-    return arguments;
-}()) === "Arguments";
-// fallback for IE11 Script Access Denied error
-var tryGet = function(it, key) {
-    try {
-        return it[key];
-    } catch (error) {}
-};
-// getting tag from ES6+ `Object.prototype.toString`
-module.exports = TO_STRING_TAG_SUPPORT ? classofRaw : function(it) {
-    var O, tag, result;
-    return it === undefined ? "Undefined" : it === null ? "Null" : typeof (tag = tryGet(O = $Object(it), TO_STRING_TAG)) == "string" ? tag : CORRECT_ARGUMENTS ? classofRaw(O) : (result = classofRaw(O)) === "Object" && isCallable(O.callee) ? "Arguments" : result;
-};
-
-},{"397e535b3976d304":"3Do6Z","eebd8012c2d2c3ae":"l3Kyn","8da113eeaf06c4ba":"bdfmm","df252844008f634":"gTwyA"}],"3Do6Z":[function(require,module,exports) {
-"use strict";
-var wellKnownSymbol = require("6306cd4835715127");
-var TO_STRING_TAG = wellKnownSymbol("toStringTag");
-var test = {};
-test[TO_STRING_TAG] = "z";
-module.exports = String(test) === "[object z]";
-
-},{"6306cd4835715127":"gTwyA"}],"hs7nW":[function(require,module,exports) {
-"use strict";
-var call = require("a4a3a7d4a45c4219");
-var anObject = require("feb876e7da2df7bd");
-var getMethod = require("2e660cdfabd9c61f");
-module.exports = function(iterator, kind, value) {
-    var innerResult, innerError;
-    anObject(iterator);
-    try {
-        innerResult = getMethod(iterator, "return");
-        if (!innerResult) {
-            if (kind === "throw") throw value;
-            return value;
-        }
-        innerResult = call(innerResult, iterator);
-    } catch (error) {
-        innerError = true;
-        innerResult = error;
-    }
-    if (kind === "throw") throw value;
-    if (innerError) throw innerResult;
-    anObject(innerResult);
-    return value;
-};
-
-},{"a4a3a7d4a45c4219":"d7JlP","feb876e7da2df7bd":"4isCr","2e660cdfabd9c61f":"9Zfiw"}],"f9Wim":[function(require,module,exports) {
-"use strict";
-var uncurryThis = require("89734044d2e98b8d");
-// eslint-disable-next-line es/no-map -- safe
-var MapPrototype = Map.prototype;
-module.exports = {
-    // eslint-disable-next-line es/no-map -- safe
-    Map: Map,
-    set: uncurryThis(MapPrototype.set),
-    get: uncurryThis(MapPrototype.get),
-    has: uncurryThis(MapPrototype.has),
-    remove: uncurryThis(MapPrototype["delete"]),
-    proto: MapPrototype
-};
-
-},{"89734044d2e98b8d":"7GlkT"}],"b9ez5":[function(require,module,exports) {
-"use strict";
-var global = require("c050e94c4f6437d6");
-var defineWellKnownSymbol = require("efe796c38aca437b");
-var defineProperty = require("d6dbf5d754dc3607").f;
-var getOwnPropertyDescriptor = require("9075339d618418b3").f;
-var Symbol = global.Symbol;
-// `Symbol.dispose` well-known symbol
-// https://github.com/tc39/proposal-explicit-resource-management
-defineWellKnownSymbol("dispose");
-if (Symbol) {
-    var descriptor = getOwnPropertyDescriptor(Symbol, "dispose");
-    // workaround of NodeJS 20.4 bug
-    // https://github.com/nodejs/node/issues/48699
-    // and incorrect descriptor from some transpilers and userland helpers
-    if (descriptor.enumerable && descriptor.configurable && descriptor.writable) defineProperty(Symbol, "dispose", {
-        value: descriptor.value,
-        enumerable: false,
-        configurable: false,
-        writable: false
-    });
-}
-
-},{"c050e94c4f6437d6":"i8HOC","efe796c38aca437b":"en5fF","d6dbf5d754dc3607":"iJR4w","9075339d618418b3":"lk5NI"}],"en5fF":[function(require,module,exports) {
-"use strict";
-var path = require("8d5159b7d317832f");
-var hasOwn = require("42a3ea18819bfbb");
-var wrappedWellKnownSymbolModule = require("7ec639749e279eeb");
-var defineProperty = require("cbbe4becefd5c21c").f;
-module.exports = function(NAME) {
-    var Symbol = path.Symbol || (path.Symbol = {});
-    if (!hasOwn(Symbol, NAME)) defineProperty(Symbol, NAME, {
-        value: wrappedWellKnownSymbolModule.f(NAME)
-    });
-};
-
-},{"8d5159b7d317832f":"gKjqB","42a3ea18819bfbb":"gC2Q5","7ec639749e279eeb":"9TrPc","cbbe4becefd5c21c":"iJR4w"}],"gKjqB":[function(require,module,exports) {
-"use strict";
-var global = require("70f8eb6067a24c7e");
-module.exports = global;
-
-},{"70f8eb6067a24c7e":"i8HOC"}],"9TrPc":[function(require,module,exports) {
-"use strict";
-var wellKnownSymbol = require("2e34ececd06658d9");
-exports.f = wellKnownSymbol;
-
-},{"2e34ececd06658d9":"gTwyA"}],"49tUX":[function(require,module,exports) {
-"use strict";
-// TODO: Remove this module from `core-js@4` since it's split to modules listed below
-require("52e9b3eefbbce1ed");
-require("292fa64716f5b39e");
-
-},{"52e9b3eefbbce1ed":"fOGFr","292fa64716f5b39e":"l7FDS"}],"fOGFr":[function(require,module,exports) {
-"use strict";
-var $ = require("79389288a80b279c");
-var global = require("22a078687be7e1b6");
-var clearImmediate = require("84ba5ca62b8b14c9").clear;
-// `clearImmediate` method
-// http://w3c.github.io/setImmediate/#si-clearImmediate
-$({
-    global: true,
-    bind: true,
-    enumerable: true,
-    forced: global.clearImmediate !== clearImmediate
-}, {
-    clearImmediate: clearImmediate
-});
-
-},{"79389288a80b279c":"dIGt4","22a078687be7e1b6":"i8HOC","84ba5ca62b8b14c9":"7jDg7"}],"7jDg7":[function(require,module,exports) {
+},{"10299561ea0c7870":"hL6D2","8b1ecdaf59f07210":"l3Kyn"}],"7jDg7":[function(require,module,exports) {
 "use strict";
 var global = require("1e8ed58235e9956a");
 var apply = require("e574be68c288c7c8");
@@ -2148,7 +1746,32 @@ module.exports = typeof Reflect == "object" && Reflect.apply || (NATIVE_BIND ? c
     return call.apply(apply, arguments);
 });
 
-},{"d07466971ded2aca":"i16Dq"}],"2pze4":[function(require,module,exports) {
+},{"d07466971ded2aca":"i16Dq"}],"7vpmS":[function(require,module,exports) {
+"use strict";
+var uncurryThis = require("92f6f475baa85665");
+var aCallable = require("547ee4f9dab0cc76");
+var NATIVE_BIND = require("5acd31cba656d393");
+var bind = uncurryThis(uncurryThis.bind);
+// optional / simple context binding
+module.exports = function(fn, that) {
+    aCallable(fn);
+    return that === undefined ? fn : NATIVE_BIND ? bind(fn, that) : function() {
+        return fn.apply(that, arguments);
+    };
+};
+
+},{"92f6f475baa85665":"5Hioa","547ee4f9dab0cc76":"gOMir","5acd31cba656d393":"i16Dq"}],"5Hioa":[function(require,module,exports) {
+"use strict";
+var classofRaw = require("8e77093015e1e67f");
+var uncurryThis = require("9daa4dbbca634c9e");
+module.exports = function(fn) {
+    // Nashorn bug:
+    //   https://github.com/zloirock/core-js/issues/1128
+    //   https://github.com/zloirock/core-js/issues/1130
+    if (classofRaw(fn) === "Function") return uncurryThis(fn);
+};
+
+},{"8e77093015e1e67f":"bdfmm","9daa4dbbca634c9e":"7GlkT"}],"2pze4":[function(require,module,exports) {
 "use strict";
 var getBuiltIn = require("14cb391fa4a0dda8");
 module.exports = getBuiltIn("document", "documentElement");
@@ -2261,44 +1884,6 @@ exports.export = function(dest, destName, get) {
         get: get
     });
 };
-
-},{}],"loVOp":[function(require,module,exports) {
-module.exports = require("9bcc84ee5d265e38").getBundleURL("hWUTQ") + "icons.dfd7a6db.svg" + "?" + Date.now();
-
-},{"9bcc84ee5d265e38":"lgJ39"}],"lgJ39":[function(require,module,exports) {
-"use strict";
-var bundleURL = {};
-function getBundleURLCached(id) {
-    var value = bundleURL[id];
-    if (!value) {
-        value = getBundleURL();
-        bundleURL[id] = value;
-    }
-    return value;
-}
-function getBundleURL() {
-    try {
-        throw new Error();
-    } catch (err) {
-        var matches = ("" + err.stack).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^)\n]+/g);
-        if (matches) // The first two stack frames will be this function and getBundleURLCached.
-        // Use the 3rd one, which will be a runtime in the original bundle.
-        return getBaseURL(matches[2]);
-    }
-    return "/";
-}
-function getBaseURL(url) {
-    return ("" + url).replace(/^((?:https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/.+)\/[^/]+$/, "$1") + "/";
-}
-// TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
-function getOrigin(url) {
-    var matches = ("" + url).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^/]+/);
-    if (!matches) throw new Error("Origin not found");
-    return matches[0];
-}
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-exports.getOrigin = getOrigin;
 
 },{}],"dXNgZ":[function(require,module,exports) {
 /**
@@ -2885,6 +2470,715 @@ try {
     else Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}]},["hycaY","aenu9"], "aenu9", "parcelRequire3a11")
+},{}],"Y4A21":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "state", ()=>state);
+parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
+const state = {
+    recipe: {}
+};
+const loadRecipe = async function(id) {
+    try {
+        const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
+        const data = await res.json();
+        if (res.status != 200) throw new Error(`${data.message} (${res.status})`);
+        const { recipe } = data.data;
+        state.recipe = {
+            id: recipe.id,
+            title: recipe.title,
+            publisher: recipe.publisher,
+            sourceUrl: recipe.source_url,
+            image: recipe.image_url,
+            servings: recipe.servings,
+            cookingTime: recipe.cooking_time,
+            ingredients: recipe.ingredients
+        };
+    } catch (err) {
+        alert(err);
+    }
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l60JC":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+var _fractional = require("fractional");
+class RecipeView {
+    #parentElement = document.querySelector(".recipe");
+    #data;
+    render(data) {
+        this.#data = data;
+        const markup = this._generateMarkup();
+        this._clear();
+        this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    _clear() {
+        this.#parentElement.innerHTML = "";
+    }
+    #generateMarkupIngridient(ing) {
+        return `
+    <li class="recipe__ingredient">
+    <svg class="recipe__icon">
+      <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
+    </svg>
+    <div class="recipe__quantity">${ing.quantity ? new (0, _fractional.Fraction)(ing.quantity).toString() : ""}</div>
+    <div class="recipe__description">
+      <span class="recipe__unit">${ing.unit}</span>
+      ${ing.description}
+    </div>
+  </li>`;
+    }
+    renderSpinner = function() {
+        const markup = `<div class="spinner">
+        <svg>
+          <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
+        </svg>
+      </div>`;
+        this._clear();
+        this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+    };
+    _generateMarkup() {
+        return `<figure class="recipe__fig">
+    <img src="${this.#data.image}" alt="${this.#data.title}" class="recipe__img" />
+    <h1 class="recipe__title">
+      <span>${this.#data.title}</span>
+    </h1>
+  </figure>
+
+  <div class="recipe__details">
+    <div class="recipe__info">
+      <svg class="recipe__info-icon">
+        <use href="${0, _iconsSvgDefault.default}#icon-clock"></use>
+      </svg>
+      <span class="recipe__info-data recipe__info-data--minutes">${this.#data.cookingTime}</span>
+      <span class="recipe__info-text">minutes</span>
+    </div>
+    <div class="recipe__info">
+      <svg class="recipe__info-icon">
+        <use href="${0, _iconsSvgDefault.default}#icon-users"></use>
+      </svg>
+      <span class="recipe__info-data recipe__info-data--people">4</span>
+      <span class="recipe__info-text">${this.#data.servings}</span>
+
+      <div class="recipe__info-buttons">
+        <button class="btn--tiny btn--increase-servings">
+          <svg>
+            <use href="${0, _iconsSvgDefault.default}#icon-minus-circle"></use>
+          </svg>
+        </button>
+        <button class="btn--tiny btn--increase-servings">
+          <svg>
+            <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="recipe__user-generated">
+      <svg>
+        <use href="${0, _iconsSvgDefault.default}#icon-user"></use>
+      </svg>
+    </div>
+    <button class="btn--round">
+      <svg class="">
+        <use href="${0, _iconsSvgDefault.default}#icon-bookmark-fill"></use>
+      </svg>
+    </button>
+  </div>
+
+  <div class="recipe__ingredients">
+    <h2 class="heading--2">Recipe ingredients</h2>
+    <ul class="recipe__ingredient-list">
+    ${this.#data.ingredients.map(this.#generateMarkupIngridient).join("")}
+    </ul>
+  </div>
+
+  <div class="recipe__directions">
+    <h2 class="heading--2">How to cook it</h2>
+    <p class="recipe__directions-text">
+      This recipe was carefully designed and tested by
+      <span class="recipe__publisher">${this.#data.publisher}</span>. Please check out
+      directions at their website.
+    </p>
+    <a
+      class="btn--small recipe__btn"
+      href="${this.#data.sourceUrl}"
+      target="_blank"
+    >
+      <span>Directions</span>
+      <svg class="search__icon">
+        <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+      </svg>
+    </a>
+  </div>`;
+    }
+}
+exports.default = new RecipeView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../../img/icons.svg":"loVOp","fractional":"3SU56"}],"loVOp":[function(require,module,exports) {
+module.exports = require("9bcc84ee5d265e38").getBundleURL("hWUTQ") + "icons.dfd7a6db.svg" + "?" + Date.now();
+
+},{"9bcc84ee5d265e38":"lgJ39"}],"lgJ39":[function(require,module,exports) {
+"use strict";
+var bundleURL = {};
+function getBundleURLCached(id) {
+    var value = bundleURL[id];
+    if (!value) {
+        value = getBundleURL();
+        bundleURL[id] = value;
+    }
+    return value;
+}
+function getBundleURL() {
+    try {
+        throw new Error();
+    } catch (err) {
+        var matches = ("" + err.stack).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^)\n]+/g);
+        if (matches) // The first two stack frames will be this function and getBundleURLCached.
+        // Use the 3rd one, which will be a runtime in the original bundle.
+        return getBaseURL(matches[2]);
+    }
+    return "/";
+}
+function getBaseURL(url) {
+    return ("" + url).replace(/^((?:https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/.+)\/[^/]+$/, "$1") + "/";
+}
+// TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
+function getOrigin(url) {
+    var matches = ("" + url).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^/]+/);
+    if (!matches) throw new Error("Origin not found");
+    return matches[0];
+}
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+exports.getOrigin = getOrigin;
+
+},{}],"3SU56":[function(require,module,exports) {
+/*
+fraction.js
+A Javascript fraction library.
+
+Copyright (c) 2009  Erik Garrison <erik@hypervolu.me>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/ /* Fractions */ /* 
+ *
+ * Fraction objects are comprised of a numerator and a denomenator.  These
+ * values can be accessed at fraction.numerator and fraction.denomenator.
+ *
+ * Fractions are always returned and stored in lowest-form normalized format.
+ * This is accomplished via Fraction.normalize.
+ *
+ * The following mathematical operations on fractions are supported:
+ *
+ * Fraction.equals
+ * Fraction.add
+ * Fraction.subtract
+ * Fraction.multiply
+ * Fraction.divide
+ *
+ * These operations accept both numbers and fraction objects.  (Best results
+ * are guaranteed when the input is a fraction object.)  They all return a new
+ * Fraction object.
+ *
+ * Usage:
+ *
+ * TODO
+ *
+ */ /*
+ * The Fraction constructor takes one of:
+ *   an explicit numerator (integer) and denominator (integer),
+ *   a string representation of the fraction (string),
+ *   or a floating-point number (float)
+ *
+ * These initialization methods are provided for convenience.  Because of
+ * rounding issues the best results will be given when the fraction is
+ * constructed from an explicit integer numerator and denomenator, and not a
+ * decimal number.
+ *
+ *
+ * e.g. new Fraction(1, 2) --> 1/2
+ *      new Fraction('1/2') --> 1/2
+ *      new Fraction('2 3/4') --> 11/4  (prints as 2 3/4)
+ *
+ */ Fraction = function(numerator, denominator) {
+    /* double argument invocation */ if (typeof numerator !== "undefined" && denominator) {
+        if (typeof numerator === "number" && typeof denominator === "number") {
+            this.numerator = numerator;
+            this.denominator = denominator;
+        } else if (typeof numerator === "string" && typeof denominator === "string") {
+            // what are they?
+            // hmm....
+            // assume they are ints?
+            this.numerator = parseInt(numerator);
+            this.denominator = parseInt(denominator);
+        }
+    /* single-argument invocation */ } else if (typeof denominator === "undefined") {
+        num = numerator; // swap variable names for legibility
+        if (typeof num === "number") {
+            this.numerator = num;
+            this.denominator = 1;
+        } else if (typeof num === "string") {
+            var a, b; // hold the first and second part of the fraction, e.g. a = '1' and b = '2/3' in 1 2/3
+            // or a = '2/3' and b = undefined if we are just passed a single-part number
+            var arr = num.split(" ");
+            if (arr[0]) a = arr[0];
+            if (arr[1]) b = arr[1];
+            /* compound fraction e.g. 'A B/C' */ //  if a is an integer ...
+            if (a % 1 === 0 && b && b.match("/")) return new Fraction(a).add(new Fraction(b));
+            else if (a && !b) {
+                /* simple fraction e.g. 'A/B' */ if (typeof a === "string" && a.match("/")) {
+                    // it's not a whole number... it's actually a fraction without a whole part written
+                    var f = a.split("/");
+                    this.numerator = f[0];
+                    this.denominator = f[1];
+                /* string floating point */ } else if (typeof a === "string" && a.match(".")) return new Fraction(parseFloat(a));
+                else {
+                    this.numerator = parseInt(a);
+                    this.denominator = 1;
+                }
+            } else return undefined; // could not parse
+        }
+    }
+    this.normalize();
+};
+Fraction.prototype.clone = function() {
+    return new Fraction(this.numerator, this.denominator);
+};
+/* pretty-printer, converts fractions into whole numbers and fractions */ Fraction.prototype.toString = function() {
+    if (this.denominator === "NaN") return "NaN";
+    var wholepart = this.numerator / this.denominator > 0 ? Math.floor(this.numerator / this.denominator) : Math.ceil(this.numerator / this.denominator);
+    var numerator = this.numerator % this.denominator;
+    var denominator = this.denominator;
+    var result = [];
+    if (wholepart != 0) result.push(wholepart);
+    if (numerator != 0) result.push((wholepart === 0 ? numerator : Math.abs(numerator)) + "/" + denominator);
+    return result.length > 0 ? result.join(" ") : 0;
+};
+/* destructively rescale the fraction by some integral factor */ Fraction.prototype.rescale = function(factor) {
+    this.numerator *= factor;
+    this.denominator *= factor;
+    return this;
+};
+Fraction.prototype.add = function(b) {
+    var a = this.clone();
+    if (b instanceof Fraction) b = b.clone();
+    else b = new Fraction(b);
+    td = a.denominator;
+    a.rescale(b.denominator);
+    b.rescale(td);
+    a.numerator += b.numerator;
+    return a.normalize();
+};
+Fraction.prototype.subtract = function(b) {
+    var a = this.clone();
+    if (b instanceof Fraction) b = b.clone(); // we scale our argument destructively, so clone
+    else b = new Fraction(b);
+    td = a.denominator;
+    a.rescale(b.denominator);
+    b.rescale(td);
+    a.numerator -= b.numerator;
+    return a.normalize();
+};
+Fraction.prototype.multiply = function(b) {
+    var a = this.clone();
+    if (b instanceof Fraction) {
+        a.numerator *= b.numerator;
+        a.denominator *= b.denominator;
+    } else if (typeof b === "number") a.numerator *= b;
+    else return a.multiply(new Fraction(b));
+    return a.normalize();
+};
+Fraction.prototype.divide = function(b) {
+    var a = this.clone();
+    if (b instanceof Fraction) {
+        a.numerator *= b.denominator;
+        a.denominator *= b.numerator;
+    } else if (typeof b === "number") a.denominator *= b;
+    else return a.divide(new Fraction(b));
+    return a.normalize();
+};
+Fraction.prototype.equals = function(b) {
+    if (!(b instanceof Fraction)) b = new Fraction(b);
+    // fractions that are equal should have equal normalized forms
+    var a = this.clone().normalize();
+    var b = b.clone().normalize();
+    return a.numerator === b.numerator && a.denominator === b.denominator;
+};
+/* Utility functions */ /* Destructively normalize the fraction to its smallest representation. 
+ * e.g. 4/16 -> 1/4, 14/28 -> 1/2, etc.
+ * This is called after all math ops.
+ */ Fraction.prototype.normalize = function() {
+    var isFloat = function(n) {
+        return typeof n === "number" && (n > 0 && n % 1 > 0 && n % 1 < 1 || n < 0 && n % -1 < 0 && n % -1 > -1);
+    };
+    var roundToPlaces = function(n, places) {
+        if (!places) return Math.round(n);
+        else {
+            var scalar = Math.pow(10, places);
+            return Math.round(n * scalar) / scalar;
+        }
+    };
+    return function() {
+        // XXX hackish.  Is there a better way to address this issue?
+        //
+        /* first check if we have decimals, and if we do eliminate them
+         * multiply by the 10 ^ number of decimal places in the number
+         * round the number to nine decimal places
+         * to avoid js floating point funnies
+         */ if (isFloat(this.denominator)) {
+            var rounded = roundToPlaces(this.denominator, 9);
+            var scaleup = Math.pow(10, rounded.toString().split(".")[1].length);
+            this.denominator = Math.round(this.denominator * scaleup); // this !!! should be a whole number
+            //this.numerator *= scaleup;
+            this.numerator *= scaleup;
+        }
+        if (isFloat(this.numerator)) {
+            var rounded = roundToPlaces(this.numerator, 9);
+            var scaleup = Math.pow(10, rounded.toString().split(".")[1].length);
+            this.numerator = Math.round(this.numerator * scaleup); // this !!! should be a whole number
+            //this.numerator *= scaleup;
+            this.denominator *= scaleup;
+        }
+        var gcf = Fraction.gcf(this.numerator, this.denominator);
+        this.numerator /= gcf;
+        this.denominator /= gcf;
+        if (this.numerator < 0 && this.denominator < 0 || this.numerator > 0 && this.denominator < 0) {
+            this.numerator *= -1;
+            this.denominator *= -1;
+        }
+        return this;
+    };
+}();
+/* Takes two numbers and returns their greatest common factor.
+ */ Fraction.gcf = function(a, b) {
+    var common_factors = [];
+    var fa = Fraction.primeFactors(a);
+    var fb = Fraction.primeFactors(b);
+    // for each factor in fa
+    // if it's also in fb
+    // put it into the common factors
+    fa.forEach(function(factor) {
+        var i = fb.indexOf(factor);
+        if (i >= 0) {
+            common_factors.push(factor);
+            fb.splice(i, 1); // remove from fb
+        }
+    });
+    if (common_factors.length === 0) return 1;
+    var gcf = function() {
+        var r = common_factors[0];
+        var i;
+        for(i = 1; i < common_factors.length; i++)r = r * common_factors[i];
+        return r;
+    }();
+    return gcf;
+};
+// Adapted from: 
+// http://www.btinternet.com/~se16/js/factor.htm
+Fraction.primeFactors = function(n) {
+    var num1 = Math.abs(n);
+    var factors = [];
+    var _factor = 2; // first potential prime factor
+    while(_factor * _factor <= num1)if (num1 % _factor === 0) {
+        factors.push(_factor); // so keep it
+        num1 = num1 / _factor; // and divide our search point by it
+    } else _factor++; // and increment
+    if (num1 != 1) factors.push(num1); //    so it too should be recorded
+    return factors; // Return the prime factors
+};
+module.exports.Fraction = Fraction;
+
+},{}],"3AR1K":[function(require,module,exports) {
+"use strict";
+// TODO: Remove from `core-js@4`
+require("4d92d9132913bacd");
+
+},{"4d92d9132913bacd":"c4yOM"}],"c4yOM":[function(require,module,exports) {
+"use strict";
+var $ = require("6567f4dade5d8960");
+var uncurryThis = require("f35d7393646ad055");
+var aCallable = require("c4503f7eb1018306");
+var requireObjectCoercible = require("d7c6ba4f404b5360");
+var iterate = require("ff883ec9010d6328");
+var MapHelpers = require("f9f796f22480c881");
+var IS_PURE = require("dc5cfe657d3f962b");
+var fails = require("59f5d275c85c76");
+var Map = MapHelpers.Map;
+var has = MapHelpers.has;
+var get = MapHelpers.get;
+var set = MapHelpers.set;
+var push = uncurryThis([].push);
+var DOES_NOT_WORK_WITH_PRIMITIVES = IS_PURE || fails(function() {
+    return Map.groupBy("ab", function(it) {
+        return it;
+    }).get("a").length !== 1;
+});
+// `Map.groupBy` method
+// https://github.com/tc39/proposal-array-grouping
+$({
+    target: "Map",
+    stat: true,
+    forced: IS_PURE || DOES_NOT_WORK_WITH_PRIMITIVES
+}, {
+    groupBy: function groupBy(items, callbackfn) {
+        requireObjectCoercible(items);
+        aCallable(callbackfn);
+        var map = new Map();
+        var k = 0;
+        iterate(items, function(value) {
+            var key = callbackfn(value, k++);
+            if (!has(map, key)) set(map, key, [
+                value
+            ]);
+            else push(get(map, key), value);
+        });
+        return map;
+    }
+});
+
+},{"6567f4dade5d8960":"dIGt4","f35d7393646ad055":"7GlkT","c4503f7eb1018306":"gOMir","d7c6ba4f404b5360":"fOR0B","ff883ec9010d6328":"4OXGm","f9f796f22480c881":"f9Wim","dc5cfe657d3f962b":"5ZsyC","59f5d275c85c76":"hL6D2"}],"4OXGm":[function(require,module,exports) {
+"use strict";
+var bind = require("2f267ed50e670495");
+var call = require("c0af58bb1ef1cc62");
+var anObject = require("7fa6542c03ca9239");
+var tryToString = require("fa596d1a4c07b72a");
+var isArrayIteratorMethod = require("fd753cc641a6f10a");
+var lengthOfArrayLike = require("2a15dee148d3db96");
+var isPrototypeOf = require("417f9a13deeb58a6");
+var getIterator = require("43af53be1b24dae5");
+var getIteratorMethod = require("bf7ad32b21aed0b4");
+var iteratorClose = require("5241389e1d6eeb73");
+var $TypeError = TypeError;
+var Result = function(stopped, result) {
+    this.stopped = stopped;
+    this.result = result;
+};
+var ResultPrototype = Result.prototype;
+module.exports = function(iterable, unboundFunction, options) {
+    var that = options && options.that;
+    var AS_ENTRIES = !!(options && options.AS_ENTRIES);
+    var IS_RECORD = !!(options && options.IS_RECORD);
+    var IS_ITERATOR = !!(options && options.IS_ITERATOR);
+    var INTERRUPTED = !!(options && options.INTERRUPTED);
+    var fn = bind(unboundFunction, that);
+    var iterator, iterFn, index, length, result, next, step;
+    var stop = function(condition) {
+        if (iterator) iteratorClose(iterator, "normal", condition);
+        return new Result(true, condition);
+    };
+    var callFn = function(value) {
+        if (AS_ENTRIES) {
+            anObject(value);
+            return INTERRUPTED ? fn(value[0], value[1], stop) : fn(value[0], value[1]);
+        }
+        return INTERRUPTED ? fn(value, stop) : fn(value);
+    };
+    if (IS_RECORD) iterator = iterable.iterator;
+    else if (IS_ITERATOR) iterator = iterable;
+    else {
+        iterFn = getIteratorMethod(iterable);
+        if (!iterFn) throw new $TypeError(tryToString(iterable) + " is not iterable");
+        // optimisation for array iterators
+        if (isArrayIteratorMethod(iterFn)) {
+            for(index = 0, length = lengthOfArrayLike(iterable); length > index; index++){
+                result = callFn(iterable[index]);
+                if (result && isPrototypeOf(ResultPrototype, result)) return result;
+            }
+            return new Result(false);
+        }
+        iterator = getIterator(iterable, iterFn);
+    }
+    next = IS_RECORD ? iterable.next : iterator.next;
+    while(!(step = call(next, iterator)).done){
+        try {
+            result = callFn(step.value);
+        } catch (error) {
+            iteratorClose(iterator, "throw", error);
+        }
+        if (typeof result == "object" && result && isPrototypeOf(ResultPrototype, result)) return result;
+    }
+    return new Result(false);
+};
+
+},{"2f267ed50e670495":"7vpmS","c0af58bb1ef1cc62":"d7JlP","7fa6542c03ca9239":"4isCr","fa596d1a4c07b72a":"4O7d7","fd753cc641a6f10a":"l33Z9","2a15dee148d3db96":"lY4mS","417f9a13deeb58a6":"3jtKQ","43af53be1b24dae5":"hjwee","bf7ad32b21aed0b4":"d8BiC","5241389e1d6eeb73":"hs7nW"}],"l33Z9":[function(require,module,exports) {
+"use strict";
+var wellKnownSymbol = require("85b004b6ab4bc5da");
+var Iterators = require("6de391ad2976ca02");
+var ITERATOR = wellKnownSymbol("iterator");
+var ArrayPrototype = Array.prototype;
+// check on default Array iterator
+module.exports = function(it) {
+    return it !== undefined && (Iterators.Array === it || ArrayPrototype[ITERATOR] === it);
+};
+
+},{"85b004b6ab4bc5da":"gTwyA","6de391ad2976ca02":"30XHR"}],"30XHR":[function(require,module,exports) {
+"use strict";
+module.exports = {};
+
+},{}],"hjwee":[function(require,module,exports) {
+"use strict";
+var call = require("132ebf774107ae29");
+var aCallable = require("e248489b4825ceb7");
+var anObject = require("18a343d2ef625577");
+var tryToString = require("7e576a1564cef99e");
+var getIteratorMethod = require("4a7b0311be0471b2");
+var $TypeError = TypeError;
+module.exports = function(argument, usingIterator) {
+    var iteratorMethod = arguments.length < 2 ? getIteratorMethod(argument) : usingIterator;
+    if (aCallable(iteratorMethod)) return anObject(call(iteratorMethod, argument));
+    throw new $TypeError(tryToString(argument) + " is not iterable");
+};
+
+},{"132ebf774107ae29":"d7JlP","e248489b4825ceb7":"gOMir","18a343d2ef625577":"4isCr","7e576a1564cef99e":"4O7d7","4a7b0311be0471b2":"d8BiC"}],"d8BiC":[function(require,module,exports) {
+"use strict";
+var classof = require("32d61dafd81dde78");
+var getMethod = require("84e24a6ac7559d3a");
+var isNullOrUndefined = require("f0707282c0d93eeb");
+var Iterators = require("1c181d5c49efd5d1");
+var wellKnownSymbol = require("d10d0e0ae49498c5");
+var ITERATOR = wellKnownSymbol("iterator");
+module.exports = function(it) {
+    if (!isNullOrUndefined(it)) return getMethod(it, ITERATOR) || getMethod(it, "@@iterator") || Iterators[classof(it)];
+};
+
+},{"32d61dafd81dde78":"dKT7A","84e24a6ac7559d3a":"9Zfiw","f0707282c0d93eeb":"gM5ar","1c181d5c49efd5d1":"30XHR","d10d0e0ae49498c5":"gTwyA"}],"dKT7A":[function(require,module,exports) {
+"use strict";
+var TO_STRING_TAG_SUPPORT = require("397e535b3976d304");
+var isCallable = require("eebd8012c2d2c3ae");
+var classofRaw = require("8da113eeaf06c4ba");
+var wellKnownSymbol = require("df252844008f634");
+var TO_STRING_TAG = wellKnownSymbol("toStringTag");
+var $Object = Object;
+// ES3 wrong here
+var CORRECT_ARGUMENTS = classofRaw(function() {
+    return arguments;
+}()) === "Arguments";
+// fallback for IE11 Script Access Denied error
+var tryGet = function(it, key) {
+    try {
+        return it[key];
+    } catch (error) {}
+};
+// getting tag from ES6+ `Object.prototype.toString`
+module.exports = TO_STRING_TAG_SUPPORT ? classofRaw : function(it) {
+    var O, tag, result;
+    return it === undefined ? "Undefined" : it === null ? "Null" : typeof (tag = tryGet(O = $Object(it), TO_STRING_TAG)) == "string" ? tag : CORRECT_ARGUMENTS ? classofRaw(O) : (result = classofRaw(O)) === "Object" && isCallable(O.callee) ? "Arguments" : result;
+};
+
+},{"397e535b3976d304":"3Do6Z","eebd8012c2d2c3ae":"l3Kyn","8da113eeaf06c4ba":"bdfmm","df252844008f634":"gTwyA"}],"3Do6Z":[function(require,module,exports) {
+"use strict";
+var wellKnownSymbol = require("6306cd4835715127");
+var TO_STRING_TAG = wellKnownSymbol("toStringTag");
+var test = {};
+test[TO_STRING_TAG] = "z";
+module.exports = String(test) === "[object z]";
+
+},{"6306cd4835715127":"gTwyA"}],"hs7nW":[function(require,module,exports) {
+"use strict";
+var call = require("a4a3a7d4a45c4219");
+var anObject = require("feb876e7da2df7bd");
+var getMethod = require("2e660cdfabd9c61f");
+module.exports = function(iterator, kind, value) {
+    var innerResult, innerError;
+    anObject(iterator);
+    try {
+        innerResult = getMethod(iterator, "return");
+        if (!innerResult) {
+            if (kind === "throw") throw value;
+            return value;
+        }
+        innerResult = call(innerResult, iterator);
+    } catch (error) {
+        innerError = true;
+        innerResult = error;
+    }
+    if (kind === "throw") throw value;
+    if (innerError) throw innerResult;
+    anObject(innerResult);
+    return value;
+};
+
+},{"a4a3a7d4a45c4219":"d7JlP","feb876e7da2df7bd":"4isCr","2e660cdfabd9c61f":"9Zfiw"}],"f9Wim":[function(require,module,exports) {
+"use strict";
+var uncurryThis = require("89734044d2e98b8d");
+// eslint-disable-next-line es/no-map -- safe
+var MapPrototype = Map.prototype;
+module.exports = {
+    // eslint-disable-next-line es/no-map -- safe
+    Map: Map,
+    set: uncurryThis(MapPrototype.set),
+    get: uncurryThis(MapPrototype.get),
+    has: uncurryThis(MapPrototype.has),
+    remove: uncurryThis(MapPrototype["delete"]),
+    proto: MapPrototype
+};
+
+},{"89734044d2e98b8d":"7GlkT"}],"b9ez5":[function(require,module,exports) {
+"use strict";
+var global = require("c050e94c4f6437d6");
+var defineWellKnownSymbol = require("efe796c38aca437b");
+var defineProperty = require("d6dbf5d754dc3607").f;
+var getOwnPropertyDescriptor = require("9075339d618418b3").f;
+var Symbol = global.Symbol;
+// `Symbol.dispose` well-known symbol
+// https://github.com/tc39/proposal-explicit-resource-management
+defineWellKnownSymbol("dispose");
+if (Symbol) {
+    var descriptor = getOwnPropertyDescriptor(Symbol, "dispose");
+    // workaround of NodeJS 20.4 bug
+    // https://github.com/nodejs/node/issues/48699
+    // and incorrect descriptor from some transpilers and userland helpers
+    if (descriptor.enumerable && descriptor.configurable && descriptor.writable) defineProperty(Symbol, "dispose", {
+        value: descriptor.value,
+        enumerable: false,
+        configurable: false,
+        writable: false
+    });
+}
+
+},{"c050e94c4f6437d6":"i8HOC","efe796c38aca437b":"en5fF","d6dbf5d754dc3607":"iJR4w","9075339d618418b3":"lk5NI"}],"en5fF":[function(require,module,exports) {
+"use strict";
+var path = require("8d5159b7d317832f");
+var hasOwn = require("42a3ea18819bfbb");
+var wrappedWellKnownSymbolModule = require("7ec639749e279eeb");
+var defineProperty = require("cbbe4becefd5c21c").f;
+module.exports = function(NAME) {
+    var Symbol = path.Symbol || (path.Symbol = {});
+    if (!hasOwn(Symbol, NAME)) defineProperty(Symbol, NAME, {
+        value: wrappedWellKnownSymbolModule.f(NAME)
+    });
+};
+
+},{"8d5159b7d317832f":"gKjqB","42a3ea18819bfbb":"gC2Q5","7ec639749e279eeb":"9TrPc","cbbe4becefd5c21c":"iJR4w"}],"gKjqB":[function(require,module,exports) {
+"use strict";
+var global = require("70f8eb6067a24c7e");
+module.exports = global;
+
+},{"70f8eb6067a24c7e":"i8HOC"}],"9TrPc":[function(require,module,exports) {
+"use strict";
+var wellKnownSymbol = require("2e34ececd06658d9");
+exports.f = wellKnownSymbol;
+
+},{"2e34ececd06658d9":"gTwyA"}]},["hycaY","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
